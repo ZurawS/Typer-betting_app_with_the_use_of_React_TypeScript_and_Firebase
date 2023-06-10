@@ -6,10 +6,10 @@ const Layout = () => {
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
 
   return (
-    <div className="flex w-full">
+    <div className="flex w-full bg-slate-50 max-h-screen overflow-y-hidden overflow-x-hidden">
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
-      <div className="container bg-slate-50 mx-auto pt-12 relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
+      <div className="container relative mt-12 mx-auto flex flex-col flex-1">
         <Outlet />
       </div>
     </div>

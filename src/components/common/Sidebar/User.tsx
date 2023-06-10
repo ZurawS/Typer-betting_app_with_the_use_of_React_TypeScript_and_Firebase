@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../../utils/firebase";
 import { useNavigate } from "react-router-dom";
@@ -30,7 +30,7 @@ export default function User({ sidebarExpanded }: { sidebarExpanded: boolean }) 
               <img className="w-10 h-10 rounded-full" src={user.photoURL} alt="user" />
             ) : (
               <svg
-                stroke-width="1.5"
+                strokeWidth="1.5"
                 fill="none"
                 stroke="currentColor"
                 className="w-10 h-10 text-slate-200 shrink-0"
