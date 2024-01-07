@@ -5,5 +5,6 @@ export interface Match {
   host: string;
   guest: string;
   gameDate: Timestamp;
-  result: string;
+  score90: string;
+  finalScore: string;
 }

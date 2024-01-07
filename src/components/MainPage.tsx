@@ -1,15 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import MatchPanel from "./common/MatchPanel/MatchPanel";
 import CreateMatchPanel from "./common/MatchPanel/CreateMatchPanel";
 import { Match } from "../types/Match.model";
-import { getMatches } from "../utils/firebase";
+import { auth, getBets, getMatches } from "../utils/firebase";
 import { DocumentData, QuerySnapshot } from "firebase/firestore";
+import TyperCustomButton from "./common/TyperCustomButton/TyperCustomButton";
+import { MainContext } from "../App";
+import { Bet } from "../types/Bet.model";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 export default function MainPage() {
-  const [isAddVisible, setIsAddVisible] = useState<boolean>(false);
-  const [data, setData] = useState<Match[]>([]);
+  const [isAddVisible, setIsMatchModalVisible] = useState<boolean>(false);
+  const [matchesData, setMatchesData] = useState<Match[]>([]);
+  const [betsData, setBetsData] = useState<Bet[]>([]);
+  const { isAdmin } = useContext(MainContext);
+  const [user] = useAuthState(auth);
 
-  useEffect(() => {
+  function getMatchesData() {
     getMatches((snapshot: QuerySnapshot) => {
       let temp: Match[] = [];
       snapshot.forEach((doc: DocumentData) => {
@@ -18,27 +25,44 @@ export default function MainPage() {
           ...doc.data(),
         } as Match);
       });
-      setData(temp);
+      setMatchesData(temp);
     });
+  }
+
+  function getBetsData() {
+    getBets((snapshot: QuerySnapshot) => {
+      let temp: Bet[] = [];
+      snapshot.forEach((doc: DocumentData) => {
+        temp.push({
+          id: doc.id,
+          ...doc.data(),
+        } as Bet);
+      });
+      setBetsData(temp);
+    });
+  }
+
+  function getUserBets(matchId: string): Bet | undefined {
+    return betsData.find((bet) => user && user.uid === bet.user && matchId === bet.matchId);
+  }
+
+  useEffect(() => {
+    getMatchesData();
+    getBetsData();
   }, []);
 
   return (
     <main className="px-0 max-h-screen lg:px-10 h-screen">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">Obecne zakłady</h1>
-        <button
-          onClick={() => setIsAddVisible((state) => !state)}
-          className="inline-flex items-center justify-center font-medium text-white bg-indigo-500 px-4 py-2 rounded-sm"
-        >
-          {isAddVisible ? "Anuluj dodawanie" : "Dodaj nowy"}
-        </button>
+        {isAdmin && <TyperCustomButton onClick={() => setIsMatchModalVisible((state) => !state)} label="Dodaj nowy" />}
       </div>
 
-      {isAddVisible && <CreateMatchPanel setIsAddVisible={setIsAddVisible} />}
+      {isAddVisible && <CreateMatchPanel setIsModalVisible={setIsMatchModalVisible} />}
 
       <div className="flex flex-col h-[calc(84vh)] overflow-y-scroll mt-4">
-        {data.map((gameData) => {
-          return <MatchPanel data={gameData} key={gameData.id} />;
+        {matchesData.map((gameData) => {
+          return <MatchPanel matchesData={gameData} userBet={getUserBets(gameData.id)} key={gameData.id} />;
         })}
       </div>
     </main>

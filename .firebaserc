@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "typer"
-  }
+    "default": "typertest-1c7d1",
+    "typer": "typertest-1c7d1"
+  },
+  "targets": {},
+  "etags": {}
 }

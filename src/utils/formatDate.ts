@@ -1,5 +1,7 @@
-export function formatDate(timestamp: { seconds: number; nanoseconds: number }) {
-  const date = new Date(timestamp.seconds * 1000);
+export function formatDate(timestamp: { seconds: number; nanoseconds: number }): string {
+  if(!timestamp) return 'Invalid date';
+
+  const date = new Date(timestamp?.seconds * 1000);
   return (
     [
       (date.getDate() < 10 ? "0" : "") + date.getDate(),

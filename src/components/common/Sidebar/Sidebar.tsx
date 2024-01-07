@@ -42,7 +42,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
       <div
         id="sidebar"
         ref={sidebar}
-        className={`flex flex-col absolute z-40 left-0 top-0 lg:static lg:left-auto lg:top-auto lg:translate-x-0 h-screen overflow-y-scroll lg:overflow-y-auto no-scrollbar w-64 lg:w-20 lg:sidebar-expanded:!w-64 2xl:!w-64 shrink-0 bg-slate-800 p-4 transition-all duration-200 ease-in-out ${
+        className={`flex flex-col absolute z-40 left-0 top-0 lg:static lg:left-auto lg:top-auto lg:translate-x-0 h-screen overflow-y-scroll lg:overflow-y-auto no-scrollbar w-64 lg:w-20 lg:sidebar-expanded:!w-64 shrink-0 bg-slate-800 p-4 transition-all duration-200 ease-in-out ${
           sidebarOpen ? "translate-x-0" : "-translate-x-64"
         }`}
       >
@@ -88,7 +88,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
                 fill="url(#logo-b)"
               />
             </svg>
-            <span className="flex items-center text-slate-200 text-2xl font-medium ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
+            <span className="flex items-center text-slate-200 text-2xl font-medium ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 duration-200">
               TYPER
             </span>
           </NavLink>
@@ -100,12 +100,12 @@ function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
           <div>
             <h3 className="text-xs uppercase text-slate-500 font-semibold pl-3">
               <span
-                className="hidden lg:block lg:sidebar-expanded:hidden 2xl:hidden text-center w-6"
+                className="hidden lg:block lg:sidebar-expanded:hidden text-center w-6"
                 aria-hidden="true"
               >
                 •••
               </span>
-              <span className="lg:hidden lg:sidebar-expanded:block 2xl:block">Wybierz stronę</span>
+              <span className="lg:hidden lg:sidebar-expanded:block">Wybierz stronę</span>
             </h3>
             <ul className="mt-3">
               {/* Dashboard */}
@@ -133,7 +133,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
                           d="M12 15c-1.654 0-3-1.346-3-3 0-.462.113-.894.3-1.285L6 6l4.714 3.301A2.973 2.973 0 0112 9c1.654 0 3 1.346 3 3s-1.346 3-3 3z"
                         />
                       </svg>
-                      <span className="text-sm font-medium ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
+                      <span className="text-sm font-medium ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 duration-200">
                         Obecne zakłady
                       </span>
                     </div>
@@ -165,7 +165,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
                           d="M11 1C5.477 1 1 4.582 1 9c0 1.797.75 3.45 2 4.785V19l4.833-2.416C8.829 16.85 9.892 17 11 17c5.523 0 10-3.582 10-8s-4.477-8-10-8z"
                         />
                       </svg>
-                      <span className="text-sm font-medium ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
+                      <span className="text-sm font-medium ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 duration-200">
                         Forum
                       </span>
                     </div>
@@ -188,7 +188,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
         </div>
 
         {/* Expand / collapse button */}
-        <div className="pt-3 hidden lg:inline-flex 2xl:hidden justify-end">
+        <div className="pt-3 hidden lg:inline-flex justify-end">
           <div className="px-3 py-2">
             <button onClick={() => setSidebarExpanded((currentValue) => !currentValue)}>
               <span className="sr-only">{sidebarExpanded ? "Rozwiń" : "Zwiń"} panel boczny</span>
