@@ -17,6 +17,7 @@ export default function MainPage() {
   const [user] = useAuthState(auth);
 
   function getMatchesData() {
+    console.log('here');
     getMatches((snapshot: QuerySnapshot) => {
       let temp: Match[] = [];
       snapshot.forEach((doc: DocumentData) => {
@@ -25,6 +26,10 @@ export default function MainPage() {
           ...doc.data(),
         } as Match);
       });
+      temp = temp.sort((a: Match, b: Match) => {
+        console.log(a.gameDate.toMillis(), b.gameDate.toMillis());
+        return a.gameDate.toMillis() - b.gameDate.toMillis()
+      })
       setMatchesData(temp);
     });
   }

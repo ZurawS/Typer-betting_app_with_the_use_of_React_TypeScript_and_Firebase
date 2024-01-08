@@ -40,7 +40,7 @@ export default function CreateMatchPanel({
   function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    if (!checkInputScoreFormat(score90) || !checkInputScoreFormat(finalScore)) {
+    if ((!checkInputScoreFormat(score90) || !checkInputScoreFormat(finalScore)) && editedId) {
       setError(
         `Wynik został wprowadzony w nieprawidłowym fomacie.\nPrawdiłowy format to "wynikGospodarza - wynikGościa"`
       );
