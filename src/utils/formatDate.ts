@@ -1,7 +1,9 @@
-export function formatDate(timestamp: { seconds: number; nanoseconds: number }): string {
-  if(!timestamp) return 'Invalid date';
+import { Timestamp } from "firebase/firestore";
 
-  const date = new Date(timestamp?.seconds * 1000);
+export function formatDate(timestamp: { seconds: number; nanoseconds: number }): string {
+  if (!timestamp) return "Invalid date";
+
+  const date = new Date(timestamp.seconds * 1000);
   return (
     [
       (date.getDate() < 10 ? "0" : "") + date.getDate(),
@@ -13,4 +15,12 @@ export function formatDate(timestamp: { seconds: number; nanoseconds: number }):
       ":"
     )
   );
+}
+
+export function formatFirebaseTimestampToDate(firebaseTimeStamp: Timestamp): string {
+  const date = firebaseTimeStamp.toDate();
+  const tzOffset = date.getTimezoneOffset() * 60000;
+  const adjustedDate = new Date(date.getTime() - tzOffset);
+  const formattedDateWithOffset = adjustedDate.toISOString().slice(0, -5);
+  return formattedDateWithOffset;
 }

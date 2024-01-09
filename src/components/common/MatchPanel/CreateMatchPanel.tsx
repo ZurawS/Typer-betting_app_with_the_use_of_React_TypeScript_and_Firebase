@@ -4,6 +4,7 @@ import { Timestamp, addDoc, updateDoc } from "firebase/firestore";
 import DimmedBackgroundModal from "../DimmedBackgroundModal/DimmedBackgroundModal";
 import SeparatorLine from "../SeparatorLine/SeparatorLine";
 import TyperCustomButton from "../TyperCustomButton/TyperCustomButton";
+import { formatFirebaseTimestampToDate } from "../../../utils/formatDate";
 
 export default function CreateMatchPanel({
   setIsModalVisible,
@@ -25,14 +26,13 @@ export default function CreateMatchPanel({
   const [hostTeamName, setHostTeamName] = useState<string>(initialHostTeamName || "");
   const [guestTeamName, setGuestTeamName] = useState<string>(initialGuestTeamName || "");
   const [gameDate, setGameDate] = useState<string>(
-    initialGameDate ? initialGameDate?.toDate().toISOString().split(", ").join("T").slice(0, -8) : ""
+    initialGameDate ? formatFirebaseTimestampToDate(initialGameDate) : ""
   );
   const [score90, setScore90] = useState<string>(initialScore90 || "");
   const [finalScore, setFinalScore] = useState<string>(initialFinalScore || "");
   const [error, setError] = useState<string | undefined>();
 
-  function checkInputScoreFormat(score: string){
-
+  function checkInputScoreFormat(score: string) {
     const regex = /^\d+\s{1}-\s{1}\d+$/;
     return regex.test(score);
   }
@@ -40,12 +40,16 @@ export default function CreateMatchPanel({
   function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    if ((!checkInputScoreFormat(score90) || !checkInputScoreFormat(finalScore)) && editedId) {
+    if (
+      ((score90 && !checkInputScoreFormat(score90)) || (finalScore && !checkInputScoreFormat(finalScore))) &&
+      editedId
+    ) {
       setError(
         `Wynik został wprowadzony w nieprawidłowym fomacie.\nPrawdiłowy format to "wynikGospodarza - wynikGościa"`
       );
       return;
     }
+
 
     const payload = {
       guest: guestTeamName.trim(),
@@ -171,7 +175,9 @@ export default function CreateMatchPanel({
               </>
             )}
 
-            {error && <p className="my-4 bg-rose-200 text-rose-600 px-2 py-4 rounded whitespace-pre w-[448px]">{error}</p>}
+            {error && (
+              <p className="my-4 bg-rose-200 text-rose-600 px-2 py-4 rounded whitespace-pre w-[448px]">{error}</p>
+            )}
 
             <TyperCustomButton />
           </div>

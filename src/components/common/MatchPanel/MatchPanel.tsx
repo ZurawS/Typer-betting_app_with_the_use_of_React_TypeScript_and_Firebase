@@ -12,17 +12,13 @@ import { Bet } from "../../../types/Bet.model";
 
 type Score = `${number} - ${number}`;
 
-export default function MatchPanel({ matchesData, userBet }: { matchesData: Match; userBet: Bet | undefined }) {
+export default function MatchPanel({ matchesData, userBet, isAvailable }: { matchesData: Match; isAvailable: boolean; userBet: Bet | undefined }) {
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState<boolean>(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState<boolean>(false);
   const [displayScoreBettingForm, setDisplayScoreBettingForm] = useState<boolean>(false);
   const [hostBettedScore, setHostBettedScore] = useState<string>(userBet ? userBet.host : "");
   const [guestBettedScore, setGuestBettedScore] = useState<string>(userBet ? userBet.guest : "");
   const { isAdmin } = useContext(MainContext);
-
-  //TODO - dodać pobieranie czasu z Firebase
-  // console.log(new Date().getTime() / 1000, new Date().getSeconds() + 3600, matchesData.gameDate.seconds);
-  let isAvailable: boolean = new Date().getTime() / 1000 + 3600 < matchesData.gameDate?.seconds;
 
   function deleteMatch() {
     if (!isAdmin) return;

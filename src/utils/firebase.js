@@ -12,7 +12,8 @@ const {
   REACT_APP_STORAGE_BUCKET,
   REACT_APP_MESSAGING_SENDER_ID,
   REACT_APP_APP_ID,
-  REACT_APP_ADMIN_UIDS
+  REACT_APP_ADMIN_UIDS,
+  REACT_APP_BET_PREEMPTIVE_LOCK_IN_HOURS
 } = process.env;
 
 // Your web app's Firebase configuration
@@ -33,6 +34,7 @@ export const firestore = getFirestore(firebase);
 
 //matches database
 export const userAdminUIDS = REACT_APP_ADMIN_UIDS;
+export const betPreemptiveLockInHours = REACT_APP_BET_PREEMPTIVE_LOCK_IN_HOURS;
 export const matchesRef = collection(firestore, "matches");
 export const betsRef = collection(firestore, "bets");
 export const getMatches = (callback) => onSnapshot(matchesRef, callback);
