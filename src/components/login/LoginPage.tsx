@@ -1,31 +1,40 @@
 import { signInWithEmailAndPassword } from "firebase/auth";
-import React, { FormEvent, useEffect, useState } from "react";
+import React, { FormEvent, useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../../utils/firebase";
-import { googleLogin } from "../../utils/googleAuthentication";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { MainContext } from "../../App";
 
 export default function LoginPage() {
   const [user] = useAuthState(auth);
+  const { setIsLoading } = useContext(MainContext);
   const [email, setEmail] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string | undefined>();
   const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();
-
-  function googleSignIn(): void {
-    googleLogin();
-  }
 
   function standardSignIn(e: FormEvent<HTMLFormElement>): void {
     e.preventDefault();
 
+    if (!email || !password) {
+      setErrorMessage("Proszę uzupełnić wszystkie pola formularza!");
+      return;
+    }
+
+    setIsLoading(true);
+
     signInWithEmailAndPassword(auth, email, password)
-      .then((userCredentials) => {})
+      .then((userCredentials) => {
+        setIsLoading(false);
+      })
       .catch((error) => {
-        console.error(error);
+        setErrorMessage(error && error.message ? error.message : error);
+        setIsLoading(false);
       });
   }
 
   useEffect(() => {
+    setErrorMessage(undefined);
     if (user) navigate("/");
   }, [user, navigate]);
 
@@ -45,7 +54,9 @@ export default function LoginPage() {
                 type="email"
                 name="email"
                 onChange={(e) => setEmail(e.target.value)}
-                className="block w-full mt-1 p-2 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                className={`block w-full mt-1 p-2 border-2 border-transparent border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 ${
+                  !!errorMessage && !email && "!border-rose-600"
+                }`}
               />
             </div>
           </div>
@@ -58,7 +69,9 @@ export default function LoginPage() {
                 type="password"
                 name="password"
                 onChange={(e) => setPassword(e.target.value)}
-                className="block w-full mt-1 p-2 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                className={`block w-full mt-1 p-2 border-2 border-transparent border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50
+                  ${!!errorMessage && !password && "!border-rose-600"}
+                `}
               />
             </div>
           </div>
@@ -80,24 +93,13 @@ export default function LoginPage() {
             <Link to="/register">Zarejestruj się</Link>
           </span>
         </div>
-        <div className="flex items-center w-full my-4">
-          <hr className="w-full" />
-          <p className="px-3 ">LUB</p>
-          <hr className="w-full" />
-        </div>
-        <div className="my-6 space-y-2">
-          <button
-            aria-label="Login with Google"
-            type="button"
-            onClick={googleSignIn}
-            className="flex items-center justify-center w-full p-2 space-x-4 border rounded-md focus:ring-2 focus:ring-offset-1 dark:border-gray-400 focus:ring-violet-400"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" className="w-5 h-5 fill-current">
-              <path d="M16.318 13.714v5.484h9.078c-0.37 2.354-2.745 6.901-9.078 6.901-5.458 0-9.917-4.521-9.917-10.099s4.458-10.099 9.917-10.099c3.109 0 5.193 1.318 6.38 2.464l4.339-4.182c-2.786-2.599-6.396-4.182-10.719-4.182-8.844 0-16 7.151-16 16s7.156 16 16 16c9.234 0 15.365-6.49 15.365-15.635 0-1.052-0.115-1.854-0.255-2.651z"></path>
-            </svg>
-            <p>Zaloguj się z Google</p>
-          </button>
-        </div>
+
+        {!!errorMessage && (
+          <div className="border border-rose-600 bg-rose-200 flex flex-col px-4 py-3 my-4 rounded-xl items-center">
+            <h1 className="text-rose-500 text-center font-bold mb-2">Wystapił problem podczas logowania</h1>
+            <span className="self-start text-rose-500">{errorMessage}</span>
+          </div>
+        )}
       </div>
     </div>
   );

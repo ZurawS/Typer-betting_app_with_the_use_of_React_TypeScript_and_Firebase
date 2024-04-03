@@ -60,7 +60,7 @@ export default function MatchPanel({ matchesData, userBet, isAvailable }: { matc
 
   return (
     <>
-      <div className="flex bg-white shadow-md p-4 my-4 transition-all hover:-translate-y-0.5 hover:bg-slate-50 hover:shadow-md hover:shadow-slate-400">
+      <div className="flex rounded bg-white shadow-md p-4 my-4 transition-all hover:-translate-y-0.5 hover:bg-slate-50 hover:shadow-md hover:shadow-slate-400">
         <div className="flex flex-col gap-4 w-full">
           <div className="flex items-center justify-between gap-2">
             <div className="flex gap-2">
