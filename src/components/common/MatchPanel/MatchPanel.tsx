@@ -10,14 +10,20 @@ import TyperCustomButton from "../TyperCustomButton/TyperCustomButton";
 import { MainContext } from "../../../App";
 import { Bet } from "../../../types/Bet.model";
 
-type Score = `${number} - ${number}`;
-
-export default function MatchPanel({ matchesData, userBet, isAvailable }: { matchesData: Match; isAvailable: boolean; userBet: Bet | undefined }) {
+export default function MatchPanel({
+  matchesData,
+  userBet,
+  isAvailable,
+}: {
+  matchesData: Match;
+  isAvailable: boolean;
+  userBet: Bet | undefined;
+}) {
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState<boolean>(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState<boolean>(false);
   const [displayScoreBettingForm, setDisplayScoreBettingForm] = useState<boolean>(false);
-  const [hostBettedScore, setHostBettedScore] = useState<string>(userBet ? userBet.host : "");
-  const [guestBettedScore, setGuestBettedScore] = useState<string>(userBet ? userBet.guest : "");
+  const [hostBettedScore, setHostBettedScore] = useState<string>(userBet ? userBet.hostScore : "");
+  const [guestBettedScore, setGuestBettedScore] = useState<string>(userBet ? userBet.guestScore : "");
   const { isAdmin } = useContext(MainContext);
 
   function deleteMatch() {
@@ -32,30 +38,23 @@ export default function MatchPanel({ matchesData, userBet, isAvailable }: { matc
 
     const payload = {
       matchId: matchesData.id,
-      user: auth.currentUser.uid,
-      host: hostBettedScore.trim().replaceAll(' ', ''),
-      guest: guestBettedScore.trim().replaceAll(' ', ''),
+      userId: auth.currentUser.uid,
+      userEmail: auth.currentUser.email,
+      hostTeamName: matchesData.host,
+      hostScore: hostBettedScore.trim().replaceAll(" ", ""),
+      guestTeamName: matchesData.guest,
+      guestScore: guestBettedScore.trim().replaceAll(" ", ""),
     };
 
-    if(!userBet){
+    if (!userBet) {
       addDoc(betsRef, payload);
     }
-    
-    if(userBet){
-    updateDoc(betDocumentRef(userBet.id), payload)
-    }
-  }
 
-  function checkIfBetWasCorrect(score: Score): string{
-    const [hostScore, guestScore] = score.split(' - ')
-
-    if(!userBet || hostScore !== userBet.host || guestScore !== userBet.guest){
-      return 'text-rose-600'
-    }else if(hostScore === userBet.host || guestScore === userBet.guest){
-      return 'text-green-600'
-    }else {
-      return ''
+    if (userBet) {
+      updateDoc(betDocumentRef(userBet.id), payload);
     }
+
+    setDisplayScoreBettingForm(false);
   }
 
   return (
@@ -134,49 +133,24 @@ export default function MatchPanel({ matchesData, userBet, isAvailable }: { matc
               <div className="flex flex-col gap-2">
                 <span>Twój zakład: </span>
                 <div className="flex">
-                <p className="flex flex-col items-center w-max px-8">
-                <span className="text-4xl my-2">
-                  {userBet.host}
-                </span>
-                <span className=" text-base">
-                  {matchesData.host}
-                </span>
-                </p>
-                <p className="text-4xl flex items-center pb-8">
-                  -
-                </p>
-                <p className="flex flex-col items-center w-max px-8">
-                <span className="text-4xl my-2">
-                  {userBet.guest}
-                </span>
-                <span className=" text-base">
-                  {matchesData.guest}
-                </span>
-                </p>
-              </div>
-              </div>
-            )}
-
-            {!isAvailable && matchesData.score90 && matchesData.finalScore && (
-              <>
-                <SeparatorLine />
-                <div className="flex gap-6">
-                  <div className="flex flex-col gap-1">
-                    {matchesData.score90 && <span>Wynik w 90 minucie:</span>}
-                    {matchesData.finalScore && <span>Wynik końcowy:</span>}
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    {matchesData.score90 && <span className={`font-bold ${checkIfBetWasCorrect(matchesData.score90 as Score)}`}> {matchesData.score90}</span>}
-                    {matchesData.finalScore && <span className={`font-bold ${checkIfBetWasCorrect(matchesData.finalScore as Score)}`}> {matchesData.finalScore}</span>}
-                  </div>
+                  <p className="flex flex-col items-center w-max px-8">
+                    <span className="text-4xl my-2">{userBet.hostScore}</span>
+                    <span className=" text-base">{matchesData.host}</span>
+                  </p>
+                  <p className="text-4xl flex items-center pb-8">-</p>
+                  <p className="flex flex-col items-center w-max px-8">
+                    <span className="text-4xl my-2">{userBet.guestScore}</span>
+                    <span className=" text-base">{matchesData.guest}</span>
+                  </p>
                 </div>
-                
-              </>
+              </div>
             )}
           </div>
+
           {isAvailable && !matchesData.score90 && !matchesData.finalScore && (
             <div className="w-full">
               <TyperCustomButton
+                customClass="w-48"
                 label={displayScoreBettingForm ? "Ukryj formularz" : "Obstaw wynik meczu"}
                 onClick={() => setDisplayScoreBettingForm((val) => !val)}
               />
@@ -236,8 +210,6 @@ export default function MatchPanel({ matchesData, userBet, isAvailable }: { matc
           setIsModalVisible={setIsEditModalVisible}
           initialHostTeamName={matchesData.host}
           initialGuestTeamName={matchesData.guest}
-          initialScore90={matchesData.score90}
-          initialFinalScore={matchesData.finalScore}
           initialGameDate={matchesData.gameDate}
           editedId={matchesData.id}
         />

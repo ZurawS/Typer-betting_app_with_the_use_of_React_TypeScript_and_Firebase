@@ -13,7 +13,7 @@ function FaqIcon({ active }: { active: boolean }) {
       <title>Stockholm-icons / Code / Info-circle</title>
       <desc>Created with Sketch.</desc>
       <defs />
-      <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+      <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
         <rect x="0" y="0" width="24" height="24" />
         <circle
           className={`fill-current ${active ? "text-indigo-500" : "text-slate-400"}`}

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import User from "./User";
-import ResultsPageIcon from "../../../assets/icons/ResultsPageIcon";
 import Logo from "../../../assets/icons/Logo";
 import FaqIcon from "../../../assets/icons/FaqIcon";
 import MainPageIcon from "../../../assets/icons/MainPageIcon";
@@ -85,24 +84,6 @@ function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
                       <MainPageIcon active={pathname === "/"} />
                       <span className="text-sm font-medium ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 duration-200">
                         Obecne zakłady
-                      </span>
-                    </div>
-                  </div>
-                </NavLink>
-              </li>
-              <li className={`px-3 py-2 rounded-sm mb-0.5 last:mb-0 ${pathname.includes("results") && "bg-slate-900"}`}>
-                <NavLink
-                  end
-                  to="/results"
-                  className={`block text-slate-200 truncate transition duration-150 ${
-                    pathname.includes("results") ? "hover:text-slate-200" : "hover:text-white"
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="grow flex items-center">
-                      <ResultsPageIcon active={pathname === "/results"} />
-                      <span className="text-sm font-medium ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 duration-200">
-                        Wyniki
                       </span>
                     </div>
                   </div>

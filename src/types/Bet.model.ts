@@ -1,7 +1,10 @@
 export interface Bet {
   matchId: string;
   id: string;
-  user: string;
-  host: string;
-  guest: string;
+  userId: string;
+  userEmail: string;
+  hostTeamName: string;
+  hostScore: string;
+  guestTeamName: string;
+  guestScore: string;
 }

@@ -2,7 +2,6 @@ import React, { FormEvent, useState } from "react";
 import { matchDocumentRef, matchesRef } from "../../../utils/firebase";
 import { Timestamp, addDoc, updateDoc } from "firebase/firestore";
 import DimmedBackgroundModal from "../DimmedBackgroundModal/DimmedBackgroundModal";
-import SeparatorLine from "../SeparatorLine/SeparatorLine";
 import TyperCustomButton from "../TyperCustomButton/TyperCustomButton";
 import { formatFirebaseTimestampToDate } from "../../../utils/formatDate";
 
@@ -11,16 +10,12 @@ export default function CreateMatchPanel({
   initialHostTeamName,
   initialGuestTeamName,
   initialGameDate,
-  initialScore90,
-  initialFinalScore,
   editedId = undefined,
 }: {
   setIsModalVisible: (visibility: boolean) => void;
   initialHostTeamName?: string;
   initialGuestTeamName?: string;
   initialGameDate?: Timestamp;
-  initialScore90?: string;
-  initialFinalScore?: string;
   editedId?: string;
 }) {
   const [hostTeamName, setHostTeamName] = useState<string>(initialHostTeamName || "");
@@ -28,35 +23,15 @@ export default function CreateMatchPanel({
   const [gameDate, setGameDate] = useState<string>(
     initialGameDate ? formatFirebaseTimestampToDate(initialGameDate) : ""
   );
-  const [score90, setScore90] = useState<string>(initialScore90 || "");
-  const [finalScore, setFinalScore] = useState<string>(initialFinalScore || "");
   const [error, setError] = useState<string | undefined>();
-
-  function checkInputScoreFormat(score: string) {
-    const regex = /^\d+\s{1}-\s{1}\d+$/;
-    return regex.test(score);
-  }
 
   function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-
-    if (
-      ((score90 && !checkInputScoreFormat(score90)) || (finalScore && !checkInputScoreFormat(finalScore))) &&
-      editedId
-    ) {
-      setError(
-        `Wynik został wprowadzony w nieprawidłowym fomacie.\nPrawdiłowy format to "wynikGospodarza - wynikGościa"`
-      );
-      return;
-    }
-
 
     const payload = {
       guest: guestTeamName.trim(),
       host: hostTeamName.trim(),
       gameDate: new Date(gameDate),
-      score90: score90.trim(),
-      finalScore: finalScore.trim(),
     };
 
     if (!editedId) {
@@ -70,8 +45,6 @@ export default function CreateMatchPanel({
     setGuestTeamName("");
     setHostTeamName("");
     setGameDate("");
-    setScore90("");
-    setFinalScore("");
 
     setIsModalVisible(false);
   }
@@ -142,38 +115,6 @@ export default function CreateMatchPanel({
               onChange={(e) => setGameDate(e.target.value)}
               value={gameDate}
             />
-
-            {editedId && (
-              <>
-                <div className="my-4">
-                  <SeparatorLine />
-                </div>
-                <label className="font-bold cursor-pointer w-fit" htmlFor="score90">
-                  Wynik w 90 minucie
-                </label>
-                <input
-                  id="score90"
-                  name="score90"
-                  type="text"
-                  placeholder="Proszę wpisać wynik w 90 minucie..."
-                  className="h-12 min-h-[2.5rem] min-w-[24rem] px-2 border border-slate-400 rounded my-2"
-                  onChange={(e) => setScore90(e.target.value)}
-                  value={score90}
-                />
-                <label className="font-bold cursor-pointer w-fit" htmlFor="finalScore">
-                  Wynik końcowy
-                </label>
-                <input
-                  id="finalScore"
-                  name="finalScore"
-                  type="text"
-                  placeholder="Proszę wpisać wynik końcowy..."
-                  className="h-12 min-h-[2.5rem] min-w-[24rem] px-2 border border-slate-400 rounded my-2"
-                  onChange={(e) => setFinalScore(e.target.value)}
-                  value={finalScore}
-                />
-              </>
-            )}
 
             {error && (
               <p className="my-4 bg-rose-200 text-rose-600 px-2 py-4 rounded whitespace-pre w-[448px]">{error}</p>

@@ -23,7 +23,7 @@ export default function MainPage({ matchesData, betsData, currentTime }: MainPag
   const [user] = useAuthState(auth);
 
   function getUserBets(matchId: string): Bet | undefined {
-    return betsData.find((bet) => user && user.uid === bet.user && matchId === bet.matchId);
+    return betsData.find((bet) => user && user.uid === bet.userId && matchId === bet.matchId);
   }
 
   // function getUsersList(): Bet | undefined {

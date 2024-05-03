@@ -8,7 +8,6 @@ import RegisterPage from "./components/login/RegisterPage";
 import RemindPassword from "./components/login/RemindPassword";
 import MainPage from "./components/MainPage";
 import { auth, getBets, getMatches, userAdminUIDS } from "./utils/firebase";
-import ResultsPage from "./components/Results/ResultsPage";
 import { DocumentData, QuerySnapshot } from "firebase/firestore";
 import { Match } from "./types/Match.model";
 import { Bet } from "./types/Bet.model";
@@ -88,14 +87,6 @@ function App() {
             <Route path="login" element={<LoginPage />} />
             <Route path="register" element={<RegisterPage />} />
             <Route path="remind" element={<RemindPassword />} />
-            <Route
-              path="results"
-              element={
-                <ProtectedRoute>
-                  <ResultsPage matchesData={matchesData} betsData={betsData} currentTime={currentTime} />
-                </ProtectedRoute>
-              }
-            />
             <Route
               path="faq"
               element={
