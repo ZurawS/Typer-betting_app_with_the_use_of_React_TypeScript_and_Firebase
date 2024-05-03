@@ -57,6 +57,36 @@ export default function MainPage({ matchesData, betsData, currentTime }: MainPag
     setmatchesFilteredArray(filteredData);
   }, [filterValue, matchesData]);
 
+  function downloadData() {
+    let csv: string = "";
+
+    for (let row = 0; row < betsData.length; row++) {
+      let keysAmount = Object.keys(betsData[row]).length;
+      let keysCounter = 0;
+
+      if (row === 0) {
+        for (let key in betsData[row]) {
+          csv += key + (keysCounter + 1 < keysAmount ? "," : "\r\n");
+          keysCounter++;
+        }
+      } else {
+        for (let key in betsData[row]) {
+          csv += (betsData as any)[row][key] + (keysCounter + 1 < keysAmount ? "," : "\r\n");
+          keysCounter++;
+        }
+      }
+
+      keysCounter = 0;
+    }
+
+    let link = document.createElement("a");
+    link.id = "download-csv";
+    link.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(csv));
+    link.setAttribute("download", "typer_wyniki_zebranych_danych.csv");
+    document.body.appendChild(link);
+    (document.querySelector("#download-csv") as HTMLElement).click();
+  }
+
   return (
     <main className="px-0 max-h-screen lg:px-10 h-screen">
       <div className="flex flex-col gap-2">
@@ -69,6 +99,7 @@ export default function MainPage({ matchesData, betsData, currentTime }: MainPag
                 label="Dodaj nowy"
                 customClass="h-min"
               />
+              <TyperCustomButton onClick={() => downloadData()} label="Pobierz" customClass="h-min" />
             </div>
           )}
         </div>
@@ -85,7 +116,7 @@ export default function MainPage({ matchesData, betsData, currentTime }: MainPag
 
       {isAddVisible && <CreateMatchPanel setIsModalVisible={setIsMatchModalVisible} />}
 
-      <div className="flex flex-col h-[calc(84vh)] overflow-y-scroll mt-4">
+      <div className="flex flex-col h-[calc(84vh)] overflow-y-scroll mt-4 pb-12">
         {matchesFilteredArray.map((gameData) => {
           return (
             <MatchPanel
