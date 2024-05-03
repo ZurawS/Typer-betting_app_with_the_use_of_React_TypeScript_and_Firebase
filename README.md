@@ -1,46 +1,32 @@
-# Getting Started with Create React App
+Informacje o projekcie
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Hosting i baza danych
+Aplikacja jest tak przystosowana, żebyś mógł ją hostować przy pomocy Firebase, przy jego pomocy również ogarniętą masz od razu bazę danych. Będziesz potrzebował informacji z Firebase'a, żeby ustawić potrzebne zmienne środowiskowe - patrz niżej.
 
-## Available Scripts
+Konfiguracja Firebase
+W Firebase interesują Cię 3 zakładki:
 
-In the project directory, you can run:
+- Authentication - wszyscy użytkownicy, którzy utworzyli konto na Twojej stronie
+- Firestore Database - baza danych, PAMIĘTAJ SKONFIGUROWAĆ RULES!
+- Hosting - postawienie stronki
+  Wszystkie będziesz potrzebować. Istniejeą miliony poradników jak je skonfigurować w internetach.
 
-### `npm start`
+Zmienne środowiskowe
+Pierwsze co to musisz w głównym folderze utworzyć plik .env, w którym będziesz przechowywał zmienne środowiskowe.
+W środku tego pliku musisz zawrzeć następujące informacje (to przykład mojego .env):
+REACT_APP_API_KEY=AItaSyAbeqH4-dnaYWaykVTbXF3igIpdnInnoHg
+REACT_APP_AUTH_DOMAIN=typertest-d8436.firebaseapp.com
+REACT_APP_PROJECT_ID=typertest-d8436
+REACT_APP_STORAGE_BUCKET=typertest-d8436.appspot.com
+REACT_APP_MESSAGING_SENDER_ID=171800070509
+REACT_APP_APP_ID=1:171800070509:web:9f6e146c2b2ebe062d7264
+REACT_APP_BET_PREEMPTIVE_LOCK_IN_HOURS=1
+REACT_APP_ADMIN_UIDS=["ZXH8z4eesjb6MEN3Ms0hIEh3Om43", "etTjp1AfrkMoIwPvXArTydyk6wm1"] <==== Tutaj umieszczasz id użytkowników którzy mają być administratorami - id znajdziesz w Firebase zakładka Authentication
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Zarządzanie wersją aplikacji
+W celu zarządzania wersją aplikacji wykorzystany zostął GitHub, gdzie obecnie jest ona przechowywana:
+https://github.com/ZurawS/Typer-betting_app_with_the_use_of_React_TypeScript_and_Firebase
+Jeśli wprowadzisz jakieś zmiany to musisz je wypchnąć do repo oraz zbudować i wrzucić aplikację do Firebase. Dla ułatwienia masz prosty skrypt przygotowany w pliku: "update-application.sh". Możesz go wywołać to zmiany zostaną dodane.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+Wysyłanie emaili
+Firebase pozwala na łatwą obsługę zarządzania kontami użytkowników. Dzięki temu takie elementy jak wysyłanie maili jest przez nieg zapewnione. Jeśli chcesz wprowadzić zmiany w treści jakiegoś maila np. przypominającego hasło, musisz wejść w Authentication -> Settings
