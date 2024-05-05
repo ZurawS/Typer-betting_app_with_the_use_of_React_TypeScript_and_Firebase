@@ -1,34 +1,71 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import MatchPanel from "./common/MatchPanel/MatchPanel";
 import CreateMatchPanel from "./common/MatchPanel/CreateMatchPanel";
-import { auth, betPreemptiveLockInHours } from "../utils/firebase";
+import { auth, betPreemptiveLockInHours, getTimestamp, timestampsDocumentRef, timestampsRef } from "../utils/firebase";
 import TyperCustomButton from "./common/TyperCustomButton/TyperCustomButton";
 import { MainContext } from "../App";
 import { Bet } from "../types/Bet.model";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { Match } from "../types/Match.model";
-import { formatDate } from "../utils/formatDate";
+import { formatDate, formatFirebaseTimestampToDate } from "../utils/formatDate";
+import { DocumentData, QuerySnapshot, addDoc, deleteDoc, serverTimestamp } from "firebase/firestore";
 
 interface MainPageProps {
   matchesData: Match[];
   betsData: Bet[];
-  currentTime: string | undefined;
 }
 
-export default function MainPage({ matchesData, betsData, currentTime }: MainPageProps) {
+export default function MainPage({ matchesData, betsData }: MainPageProps) {
   const [matchesFilteredArray, setmatchesFilteredArray] = useState<Match[]>([]);
   const [filterValue, setFilterValue] = useState<string>("");
   const [isAddVisible, setIsMatchModalVisible] = useState<boolean>(false);
   const { isAdmin } = useContext(MainContext);
   const [user] = useAuthState(auth);
+  const [currentTime, setCurrentTime] = useState<string | undefined>();
 
   function getUserBets(matchId: string): Bet | undefined {
     return betsData.find((bet) => user && user.uid === bet.userId && matchId === bet.matchId);
   }
 
-  // function getUsersList(): Bet | undefined {
-  //   return betsData.find((bet) => user && user.uid === bet.user && matchId === bet.matchId);
-  // }
+  const [timestampFetched, setTimestampFetched] = useState<boolean>(false);
+  async function createServerTimestamp(): Promise<string | undefined> {
+    const payload = {
+      timestamp: serverTimestamp(),
+    };
+
+    return await addDoc(timestampsRef, payload)
+      .then(function (docRef) {
+        return docRef.id;
+      })
+      .catch(function (error: Error) {
+        alert("Error adding document: " + error.message);
+        return undefined;
+      });
+  }
+
+  function getCurrentServerTimestamp(docId: string) {
+    getTimestamp((snapshot: QuerySnapshot) => {
+      snapshot.forEach(async function callback(doc: DocumentData) {
+        if (docId === doc.id) {
+          setCurrentTime(formatFirebaseTimestampToDate(doc.data().timestamp));
+          deleteDoc(timestampsDocumentRef(docId));
+        }
+      });
+    });
+  }
+
+  useEffect(() => {
+    if (betsData.length && !timestampFetched) {
+      setTimestampFetched(true);
+      createServerTimestamp()
+        .then((docId) => {
+          if (docId) {
+            getCurrentServerTimestamp(docId);
+          }
+        })
+        .finally(() => {});
+    }
+  }, [betsData]);
 
   const isBettingAvailable = useCallback(
     (timeInSeconds: number): boolean => {

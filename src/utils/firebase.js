@@ -38,11 +38,14 @@ export const betPreemptiveLockInHours = REACT_APP_BET_PREEMPTIVE_LOCK_IN_HOURS;
 export const matchesRef = collection(firestore, "matches");
 export const betsRef = collection(firestore, "bets");
 export const usersRef = collection(firestore, "users");
+export const timestampsRef = collection(firestore, "timestamps");
 
 export const getMatches = (callback) => onSnapshot(matchesRef, callback);
 export const getBets = (callback) => onSnapshot(betsRef, callback);
+export const getTimestamp = (callback) => onSnapshot(timestampsRef, callback);
 // export const getUsers = (callback) => onSnapshot(usersRef, callback);
 
 export const matchDocumentRef = (editedId) => doc(firestore, "matches", editedId);
 export const betDocumentRef = (editedId) => doc(firestore, "bets", editedId);
 export const usersDocumentRef = (editedId) => doc(firestore, "users", editedId);
+export const timestampsDocumentRef = (editedId) => doc(firestore, "timestamps", editedId);

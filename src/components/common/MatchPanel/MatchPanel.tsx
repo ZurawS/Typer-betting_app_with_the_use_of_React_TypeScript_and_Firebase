@@ -1,8 +1,8 @@
 import React, { FormEvent, useContext, useState } from "react";
 import { Match } from "../../../types/Match.model";
 import { formatDate } from "../../../utils/formatDate";
-import { addDoc, deleteDoc, updateDoc } from "firebase/firestore";
-import { auth, betDocumentRef, betsRef, matchDocumentRef } from "../../../utils/firebase";
+import { addDoc, deleteDoc, serverTimestamp, updateDoc } from "firebase/firestore";
+import { auth, betDocumentRef, betsRef, firebase, matchDocumentRef } from "../../../utils/firebase";
 import ConfirmationModal from "../ConfirmationModal/ConfirmationModal";
 import CreateMatchPanel from "./CreateMatchPanel";
 import SeparatorLine from "../SeparatorLine/SeparatorLine";
@@ -44,6 +44,8 @@ export default function MatchPanel({
       hostScore: hostBettedScore.trim().replaceAll(" ", ""),
       guestTeamName: matchesData.guest,
       guestScore: guestBettedScore.trim().replaceAll(" ", ""),
+      gameDate: matchesData.gameDate,
+      timestamp: serverTimestamp(),
     };
 
     if (!userBet) {

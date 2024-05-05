@@ -11,8 +11,6 @@ import { auth, getBets, getMatches, userAdminUIDS } from "./utils/firebase";
 import { DocumentData, QuerySnapshot } from "firebase/firestore";
 import { Match } from "./types/Match.model";
 import { Bet } from "./types/Bet.model";
-import { getCurrentWarsawTimeDate } from "./utils/getCurrentWarsawTimeDate";
-import { TimezoneInfoResponse } from "./types/TimeAPI.response";
 import Loader from "./components/common/Loader/Loader";
 import FaqPage from "./components/FaqPage/FaqPage";
 
@@ -27,7 +25,6 @@ function App() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [matchesData, setMatchesData] = useState<Match[]>([]);
   const [betsData, setBetsData] = useState<Bet[]>([]);
-  const [currentTime, setCurrentTime] = useState<string>();
 
   function getMatchesData() {
     getMatches((snapshot: QuerySnapshot) => {
@@ -58,18 +55,9 @@ function App() {
     });
   }
 
-  async function getCurrentTime() {
-    return await getCurrentWarsawTimeDate()
-      .then((data: TimezoneInfoResponse) => {
-        setCurrentTime(data.datetime);
-      })
-      .catch((error) => console.error(error));
-  }
-
   useEffect(() => {
     getMatchesData();
     getBetsData();
-    getCurrentTime();
   }, []);
 
   useEffect(() => {
@@ -99,7 +87,7 @@ function App() {
               index
               element={
                 <ProtectedRoute>
-                  <MainPage matchesData={matchesData} betsData={betsData} currentTime={currentTime} />
+                  <MainPage matchesData={matchesData} betsData={betsData} />
                 </ProtectedRoute>
               }
             />
